@@ -1,0 +1,19 @@
+# Compiled files
+*.o
+*.out
+*.exe
+
+# Build folders
+/build/
+bin/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE folders
+.vscode/
+.idea/
+
+# Logs
+*.log
