@@ -1,0 +1,10 @@
+^C:\USERS\PREM\PREM\TELEKINESIS\NLMPC\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/PREM/PREM/Telekinesis/nlmpc -BC:/Users/PREM/PREM/Telekinesis/nlmpc/build --check-stamp-file C:/Users/PREM/PREM/Telekinesis/nlmpc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
