@@ -6,7 +6,7 @@ int main() {
     using casadi::sin;
     using casadi::cos;
 
-    int N = 20;     //prediction horizon
+    int N = 20;                 //prediction horizon
     int nx = 4;
     int nu = 1;
     double h = 0.1;
@@ -58,7 +58,6 @@ int main() {
         x_ref(2, k) = 0.0;
         x_ref(3, k) = 0.0;          
     }
-
 
     casadi::DM u_ref = casadi::DM::zeros(nu);               // desired control set to zero
     casadi::DM Q = casadi::DM::eye(nx);                     // state cost matrix
@@ -118,8 +117,8 @@ int main() {
         }
         
         // Store state and control
-        state_traj.push_back(std::vector<double>(x_curr_vec));
-        control_traj.push_back(std::vector<double>(u0_vec));
+        state_traj.push_back((x_curr_vec));
+        control_traj.push_back((u0_vec));
 
         x_curr = x_next;
     }

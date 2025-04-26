@@ -65,7 +65,7 @@ casadi::DM solve_nlp(
     const casadi::DM& u_max,
     const casadi::DM& x_min,
     const casadi::DM& x_max,
-    const casadi::DM* warm_start_x0 = nullptr
+    const casadi::DM* warm_start_x0
 ) {
         // Symbolic variables
     std::vector<casadi::MX> xs, us;
@@ -146,7 +146,6 @@ casadi::DM solve_nlp(
     return result.at("x");
 }
 
-//------------- Simulate dynamics using RK4 (generates actual values)---------------//
 casadi::DM simulate_dynamics(const casadi::Function& f, const casadi::DM& x, const casadi::DM& u, double h) {
     casadi::DM k1 = f(casadi::DMVector{x, u})[0];
     casadi::DM k2 = f(casadi::DMVector{x + 0.5 * h * k1, u})[0];
@@ -156,7 +155,6 @@ casadi::DM simulate_dynamics(const casadi::Function& f, const casadi::DM& x, con
     return x + (h / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4);
 }
 
-//----------- Save results to CSV --------------//
 void save_to_csv(const std::string& filename, const std::vector<std::vector<double>>& data) {
 
     std::ofstream file(filename);
