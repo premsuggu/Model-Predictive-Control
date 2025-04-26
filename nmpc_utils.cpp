@@ -49,7 +49,7 @@ casadi::MX create_dynamics_constraints(const std::vector<casadi::MX>& xs,
     return casadi::MX::vertcat(constraints);
 }
 
-casadi::DM solve_nmpc(
+casadi::DM solve_qp(
     int N,
     double h,
     int nx,
