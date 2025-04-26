@@ -96,7 +96,7 @@ int main() {
             warm_start_ptr = &prev_sol;
         }
     
-        casadi::DM sol = solve_qp(
+        casadi::DM sol = solve_nlp(
             N, h, nx, nu, f,
             std::vector<double>(x_curr->begin(), x_curr->end()),
             x_ref, u_ref, Q, R, Qf,

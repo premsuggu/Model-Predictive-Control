@@ -25,7 +25,7 @@ casadi::MX create_cost_function(
     const casadi::MX& Qf
 );
 
-casadi::DM solve_qp(
+casadi::DM solve_nlp(
     int N,
     double h,
     int nx,
