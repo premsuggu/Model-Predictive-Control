@@ -1,6 +1,5 @@
 #include "nmpc_utils.hpp"
 #include <casadi/casadi.hpp>
-#include <vector>
 #include <iostream>
 
 int main() {
@@ -88,30 +87,39 @@ int main() {
     std::vector<std::vector<double>> state_traj;
     std::vector<std::vector<double>> control_traj;
 
-    std::vector<double> prev_sol; 
+    casadi::DM prev_sol; 
     for (int t = 0; t < sim_steps; ++t) {
 
-        std::vector<double>* warm_start_ptr = nullptr;
-        if (!prev_sol.empty()) {
+        casadi::DM* warm_start_ptr = nullptr;
+        if (!prev_sol.is_empty()) {
             warm_start_ptr = &prev_sol;
         }
     
         casadi::DM sol = solve_nlp(
-            N, h, nx, nu, f,
-            std::vector<double>(x_curr->begin(), x_curr->end()),
+            N, h, nx, nu, f, x_curr,
             x_ref, u_ref, Q, R, Qf,
             u_min, u_max, x_min, x_max,
             warm_start_ptr
         );
 
-        prev_sol = std::vector<double>(sol->begin(), sol->end());
+        prev_sol = sol;
 
         casadi::DM u0 = sol(casadi::Slice((N+1)*nx, (N+1)*nx + nu));
         casadi::DM x_next = simulate_dynamics(f, x_curr, u0, h);
 
+        std::vector<double> u0_vec(nu);
+        std::vector<double> x_curr_vec(nx);
+
+        for (int i = 0; i < nu; ++i) {
+            u0_vec[i] = static_cast<double>(u0(i));
+        }
+        for (int i = 0; i < nx; ++i) {
+            x_curr_vec[i] = static_cast<double>(x_curr(i));
+        }
+        
         // Store state and control
-        state_traj.push_back(std::vector<double>(x_curr->begin(), x_curr->end()));
-        control_traj.push_back(std::vector<double>(u0->begin(), u0->end()));
+        state_traj.push_back(std::vector<double>(x_curr_vec));
+        control_traj.push_back(std::vector<double>(u0_vec));
 
         x_curr = x_next;
     }

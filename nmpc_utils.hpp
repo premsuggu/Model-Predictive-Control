@@ -31,7 +31,7 @@ casadi::DM solve_nlp(
     int nx,
     int nu,
     const casadi::Function& f,
-    std::vector<double> x_init,
+    const casadi::DM& x_init,
     const casadi::DM& x_ref,
     const casadi::DM& u_ref,
     const casadi::DM& Q,
@@ -41,7 +41,7 @@ casadi::DM solve_nlp(
     const casadi::DM& u_max,
     const casadi::DM& x_min,
     const casadi::DM& x_max,
-    const std::vector<double>* warm_start_x0
+    const casadi::DM* warm_start_x0 = nullptr
 );
 
 // Simulate dynamics using RK4

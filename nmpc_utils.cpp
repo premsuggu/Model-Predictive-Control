@@ -55,7 +55,7 @@ casadi::DM solve_nlp(
     int nx,
     int nu,
     const casadi::Function& f,
-    std::vector<double> x_init,
+    const casadi::DM& x_init,
     const casadi::DM& x_ref,                       
     const casadi::DM& u_ref,
     const casadi::DM& Q,
@@ -65,7 +65,7 @@ casadi::DM solve_nlp(
     const casadi::DM& u_max,
     const casadi::DM& x_min,
     const casadi::DM& x_max,
-    const std::vector<double>* warm_start_x0
+    const casadi::DM* warm_start_x0 = nullptr
 ) {
         // Symbolic variables
     std::vector<casadi::MX> xs, us;
@@ -91,9 +91,13 @@ casadi::DM solve_nlp(
     int n_cons = g.size1();
 
     std::vector<double> x0(n_vars, 0.0);
-    if (warm_start_x0 && warm_start_x0->size() == n_vars) {
-        x0 = *warm_start_x0;
-    }    
+    if (warm_start_x0 && warm_start_x0->size1() == n_vars) {
+        // Convert casadi::DM to std::vector<double>
+        for (int i = 0; i < n_vars; i++) {
+            x0[i] = static_cast<double>((*warm_start_x0)(i));
+        }
+    }
+    
     std::vector<double> lbg(n_cons, 0.0);
     std::vector<double> ubg(n_cons, 0.0);
     std::vector<double> lbx(n_vars, -casadi::inf);
@@ -120,8 +124,8 @@ casadi::DM solve_nlp(
     
     // Fix initial state
     for (int j = 0; j < nx; ++j) {
-        lbx[j] = x_init[j];
-        ubx[j] = x_init[j];
+        lbx[j] = static_cast<double>(x_init(j));
+        ubx[j] = static_cast<double>(x_init(j));
     }
     
     // Solver
