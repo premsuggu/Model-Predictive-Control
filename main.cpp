@@ -13,7 +13,7 @@ int main() {
     double h = 0.1;
     int sim_steps = 100;
 
-    //Physical parameters for pendulum
+    //Physical parameters for pendulum cart system 
     double M = 1.0;     // mass of cart
     double m = 0.5;     // mass of pendulum
     double l = 0.6;     // length to pendulum center of mass
@@ -22,7 +22,7 @@ int main() {
 
     // Dynamics (pendulum on cart)
     casadi::MX x = casadi::MX::sym("x", nx);    // state vector [x, x_dot, theta, theta_dot]
-    casadi::MX u = casadi::MX::sym("u", nu);
+    casadi::MX u = casadi::MX::sym("u", nu);    // control input (force on cart)
 
     casadi::MX p = x(0);
     casadi::MX v = x(1);
@@ -68,14 +68,14 @@ int main() {
     casadi::DM Qf =  2*Q;                                   // terminal cost matrix
 
     casadi::DM x_curr = casadi::DM::zeros(nx);
-    x_curr(0) = 0.0; x_curr(1) = 0.0; x_curr(2) = 0.0; x_curr(3) = 0.0; // Initial state
+    x_curr(0) = 0.0; x_curr(1) = 0.0; x_curr(2) = 0.0; x_curr(3) = 0.0;     // Initial state
 
     casadi::DM x_min = casadi::DM::zeros(nx);   
     casadi::DM x_max = casadi::DM::zeros(nx);
     
-    x_min(0) = -5.0;   x_max(0) = 5.0;             // cart position limits (meters)
+    x_min(0) = -5.0;   x_max(0) = 5.0;              // cart position limits (meters)
     x_min(1) = -3.0;   x_max(1) = 3.0;              // velocity
-    x_min(2) = -0.5;   x_max(2) = 0.5;                // angle limits (radians)
+    x_min(2) = -0.5;   x_max(2) = 0.5;              // angle limits (radians)
     x_min(3) = -2.0;   x_max(3) = 2.0;              // angular velocity
     
     casadi::DM u_min = casadi::DM::zeros(nu);
