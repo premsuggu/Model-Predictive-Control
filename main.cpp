@@ -19,7 +19,7 @@ int main() {
     double g = 9.81;    // gravity
 
     // Dynamics (pendulum on cart)
-    casadi::MX x = casadi::MX::sym("x", nx);    // state vector [x, x_dot, theta, theta_dot]
+    casadi::MX x = casadi::MX::sym("x", nx);    // state vector [x, vel, angle, angular vel]
     casadi::MX u = casadi::MX::sym("u", nu);    // control input (force on cart)
 
     casadi::MX p = x(0);
@@ -27,7 +27,6 @@ int main() {
     casadi::MX theta = x(2);
     casadi::MX omega = x(3);
 
-    // Intermediate computations
     casadi::MX sin_theta = sin(theta);
     casadi::MX cos_theta = cos(theta);
     casadi::MX total_mass = M + m;
@@ -58,10 +57,10 @@ int main() {
     }
     casadi::DM u_ref = casadi::DM::zeros(nu, N);               // desired control set to zero
 
-    casadi::DM Q = casadi::DM::eye(nx);                     // state cost matrix
+    casadi::DM Q = casadi::DM::eye(nx);                        // state cost matrix
     Q(0,0) = 1; Q(1,1) = 1; Q(2,2) = 10; Q(3,3) = 1; 
-    casadi::DM R = 0.5 * casadi::DM::eye(nu);               // control cost matrix
-    casadi::DM Qf =  2*Q;                                   // terminal cost matrix
+    casadi::DM R = 0.5 * casadi::DM::eye(nu);                  // control cost matrix
+    casadi::DM Qf =  2*Q;                                      // terminal cost matrix
 
     casadi::DM x_curr = casadi::DM::zeros(nx);
     x_curr(0) = 0.0; x_curr(1) = 0.0; x_curr(2) = 0.0; x_curr(3) = 0.0;     // Initial state
@@ -81,7 +80,7 @@ int main() {
     std::vector<std::vector<double>> state_traj;
     std::vector<std::vector<double>> control_traj;
 
-    // Construct the NMPC problem ONCE
+    // Constructing the NMPC problem
     NMPCProblem nmpc(N, nx, nu, h, f, Q, R, Qf);
 
     casadi::DM prev_sol; 
@@ -91,7 +90,8 @@ int main() {
         if (!prev_sol.is_empty()) {
             warm_start_ptr = &prev_sol;
         }
-    
+        
+        // Solve the NMPC problem
         casadi::DM sol = nmpc.solve(
             x_curr, x_ref, u_ref, u_min, u_max, x_min, x_max, warm_start_ptr
         );
@@ -111,7 +111,7 @@ int main() {
             x_curr_vec[i] = static_cast<double>(x_curr(i));
         }
         
-        // Store state and control
+        // Storing state and control
         state_traj.push_back(x_curr_vec);
         control_traj.push_back(u0_vec);
 

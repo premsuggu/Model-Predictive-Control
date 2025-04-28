@@ -147,13 +147,13 @@ casadi::DM NMPCProblem::solve(const casadi::DM& x_init,
             ubx[idx + j] = static_cast<double>(u_max(j));
         }
     }
-    // Fix initial state
+    // Fixing initial state
     for (int j = 0; j < nx; ++j) {
         lbx[j] = static_cast<double>(x_init(j));
         ubx[j] = static_cast<double>(x_init(j));
     }
 
-    casadi::DM p_values = casadi::DM::vertcat({casadi::DM::vec(x_ref), casadi::DM::vec(u_ref)});
+    casadi::DM parameters = casadi::DM::vertcat({casadi::DM::vec(x_ref), casadi::DM::vec(u_ref)});
 
     casadi::DMDict arg;
     arg["x0"] = x0;
@@ -161,7 +161,7 @@ casadi::DM NMPCProblem::solve(const casadi::DM& x_init,
     arg["ubg"] = ubg;
     arg["lbx"] = lbx;
     arg["ubx"] = ubx;
-    arg["p"] = p_values;
+    arg["p"] = parameters;
 
     casadi::DMDict result = solver(arg);
     return result.at("x");

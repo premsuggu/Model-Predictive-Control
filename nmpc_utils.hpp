@@ -3,10 +3,10 @@
 #include <vector>
 #include <string>
 
-// RK4 Discretization (symbolic expression)
+// RK4 Discretization (creates symbolic expression)
 casadi::MX rk4(const casadi::Function& f, casadi::MX x, casadi::MX u, double h);
 
-// Cost Function (symbolic expression)
+// Cost Function (creates symbolic expression)
 casadi::MX create_cost_function(
     const std::vector<casadi::MX>& xs,
     const std::vector<casadi::MX>& us,
@@ -17,7 +17,7 @@ casadi::MX create_cost_function(
     const casadi::MX& Qf
 );
 
-// Dynamics Constraints (symbolic expression)
+// Dynamics Constraints (creates symbolic expression)
 casadi::MX create_dynamics_constraints(
     const std::vector<casadi::MX>& xs,
     const std::vector<casadi::MX>& us,
